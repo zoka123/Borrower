@@ -33,6 +33,7 @@ function selectListItem(key, value) {
 }
 
 function borrowToFriend() {
+    $.mobile.loading("show");
     Friends.load(function (data) {
         createList(
             data,
@@ -44,10 +45,10 @@ function borrowToFriend() {
             })
             .attr({'id': 'friends-list', 'data-role': 'listview', 'data-filter': 'true', 'data-filter-placeholder': 'Search...'})
             .htmlTo('#selection-popup')
-            .listview();
-
-        $('#selection-popup').popup().popup("open");
-
+            .listview().each(function(){
+                $.mobile.loading("hide");
+                $('#selection-popup').popup().popup("open");
+            });
     });
 }
 
@@ -55,9 +56,11 @@ function createNewBorrow(friend_id, item_id) {
     if (!confirm("Confirm your borrow")) {
         return;
     }
-
+    $.mobile.loading("show");
     Borrows.create(friend_id, item_id, function (data) {
-        alert(data.message)
+        $.mobile.loading("hide");
+        alert(data.message);
+        $('#selection-popup').popup("close");
     })
 
 

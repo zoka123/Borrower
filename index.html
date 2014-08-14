@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <meta name="format-detection" content="telephone=no"/>
+    <meta name="msapplication-tap-highlight" content="no"/>
+    <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1"/>
+    <link rel="stylesheet" type="text/css" href="css/index.css"/>
+    <title>Hello World</title>
+
+    <link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.3/jquery.mobile-1.4.3.min.css"/>
+
+    <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+    <script src="http://code.jquery.com/mobile/1.4.3/jquery.mobile-1.4.3.min.js"></script>
+    <script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.13.0/jquery.validate.min.js"></script>
+    <script src="js/helpers.js"></script>
+    <script>
+        mode = 0;
+    </script>
+</head>
+<body>
+
+<div data-role="page" id="ItemsPage">
+
+    <div data-role="header" data-theme="b">
+        <a href="#popupMenu" data-rel="popup" data-position-to="window"
+           class="ui-btn-left ui-btn ui-btn-inline ui-mini ui-corner-all ui-btn-icon-left ui-icon-bars ui-btn-icon-notext">Options</a>
+
+        <h1>Items</h1>
+
+    </div>
+
+    <div id="main" role="main" class="ui-content">
+        <a href="#AddItemPage" class="ui-btn ui-btn-b ui-icon-plus ui-btn-icon-left ui-shadow-icon">
+            Add new Item
+        </a>
+
+        <div id="items-list-container"></div>
+    </div>
+
+
+    <div data-role="panel" id="items-panel" data-theme="b" data-display="push">
+
+        <div data-role="list-divider" class="selected-list-item-name"></div>
+        <div class="selected-list-item-description"></div>
+
+        <ul data-role="listview" style="min-width:210px;">
+            <li><a href="javascript:void(0)" onclick="borrowToFriend()">Borrow to friend</a></li>
+            <li><a href="javascript:void(0)" onclick="showBorrowHistory()">Show Borrow history</a></li>
+            <li><a href="javascript:void(0)" onclick="openEditItemForm()">Edit</a></li>
+            <li><a href="javascript:void(0)" onclick="deleteItem()">Delete</a></li>
+        </ul>
+    </div>
+    <!-- /panel -->
+
+</div>
+<!-- /page -->
+
+<div data-role="page" id="FriendsPage">
+
+    <div data-role="header" data-theme="b">
+        <h1>Friends list</h1>
+    </div>
+
+    <div role="main" class="ui-content">
+        <a href="#AddFriendPage" class="ui-btn ui-btn-b ui-icon-plus ui-btn-icon-left ui-shadow-icon">
+            Add new friend
+        </a>
+
+        <div id="friends-list-container"></div>
+    </div>
+
+    <div data-role="panel" id="friends-panel" data-display="push" data-theme="b">
+        <div class="selected-list-item-name"></div>
+
+        <ul data-role="listview" style="min-width:210px;">
+            <li><a href="javascript:void(0)" onclick="showBorrowedItems()">View borrowed items</a></li>
+            <li><a href="javascript:void(0)" onclick="openEditFriendForm()">Edit</a></li>
+            <li><a href="javascript:void(0)" onclick="deleteFriend()">Delete</a></li>
+        </ul>
+    </div>
+</div>
+
+<div data-role="page" id="BorrowsPage">
+
+    <div data-role="header" data-theme="b">
+        <h1>Borrows</h1>
+    </div>
+
+    <div role="main" class="ui-content">
+        <div id="borrows-list-container"></div>
+    </div>
+
+    <div data-role="panel" id="borrows-panel" data-display="push" data-theme="b">
+        <div class="selected-list-item-name"></div>
+
+        <ul data-role="listview" style="min-width:210px;">
+            <li><a href="javascript:void(0)" onclick="markBorrowReturned(true)">Mark returned</a></li>
+            <li><a href="javascript:void(0)" onclick="markBorrowReturned(false)">Mark not returned</a></li>
+        </ul>
+    </div>
+</div>
+
+<div data-role="page" id="HistoryPage">
+
+    <div data-role="header" data-theme="b">
+        <h1>Borrows</h1>
+    </div>
+
+    <div role="main" class="ui-content">
+        <div id="history-list-container"></div>
+    </div>
+</div>
+
+
+<div data-role="page" id="AddFriendPage">
+
+    <div data-role="header">
+        <h1>New friend</h1>
+    </div>
+
+    <div role="main" class="ui-content">
+        <form class="" id="new-friend">
+            <input type="hidden" name="new-friend-edit-id" id="new-friend-edit-id">
+            <input type="text" id="new-friend-name" name="new-friend-name" placeholder="Friend's name"/>
+            <button type="submit">Ok!</button>
+            <a href="javascript:void(0)"
+               class="ui-btn ui-btn-b ui-icon-delete ui-btn-icon-left ui-shadow-icon"
+               onclick="resetFriendForm()">Reset form</a>
+        </form>
+    </div>
+
+</div>
+
+
+<div data-role="page" id="AddItemPage">
+
+    <div data-role="header">
+        <h1>Item details</h1>
+    </div>
+
+    <div role="main" class="ui-content">
+        <a href="#"
+           class="ui-btn ui-btn-b ui-icon-plus ui-btn-icon-left ui-shadow-icon"
+           onclick="startScan(loadItemCode,scanError);">Scan new item</a>
+
+        <form class="" id="new-item">
+            <label>Item code (After scan):</label>
+            <input type="text" name="new-item-code" id="new-item-code" readonly value="">
+            <input type="hidden" name="new-item-edit-id" id="new-item-edit-id">
+
+            <input type="text" id="new-item-title" name="new-item-title" placeholder="Item's title"/>
+            <textarea id="new-item-description" name="new-item-description" placeholder="Description"></textarea>
+            <button type="submit">Ok!</button>
+            <a href="javascript:void(0)"
+               class="ui-btn ui-btn-b ui-icon-delete ui-btn-icon-left ui-shadow-icon"
+               onclick="resetItemForm()">Reset form</a>
+        </form>
+    </div>
+
+</div>
+
+<div data-role="footer" data-position="fixed" data-theme="b">
+    <div data-role="navbar">
+        <ul>
+            <li><a href="#ItemsPage">Items</a></li>
+            <li><a href="#FriendsPage">Friends</a></li>
+        </ul>
+    </div>
+</div>
+
+<div data-role="popup" id="selection-popup" data-theme="a"
+     style="max-height:400px;overflow:auto;padding:5px;">
+</div>
+
+<div data-role="popup" id="popupMenu" data-theme="b">
+    <ul data-role="listview" data-inset="true" style="min-width:210px;">
+        <li data-role="list-divider">Choose an action</li>
+        <li><a href="#" onclick="startScan(quickBorrow, scanError)">Quick Borrow by Scan</a></li>
+    </ul>
+</div>
+
+<script type="text/javascript" src="cordova.js"></script>
+<script type="text/javascript" src="js/index.js"></script>
+<script type="text/javascript">
+
+    refreshLayout();
+
+    if (mode == 0) {
+        app.initialize();
+    } else {
+        app.start();
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,35 @@
+* {
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0); /* make transparent link selection, adjust last value opacity 0 to 1.0 */
+}
+
+body {
+    -webkit-touch-callout: none; /* prevent callout to copy image, etc when tap to hold */
+    -webkit-text-size-adjust: none; /* prevent webkit from resizing text to fit */
+    -webkit-user-select: none; /* prevent copy paste, to allow, change 'none' to 'text' */
+}
+
+.no-select {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.selected-list-item-name {
+    margin-bottom: 1.5em;
+    font-weight: bold;
+}
+
+.selected-list-item-description {
+    margin-bottom: 1.5em;
+}
+
+#borrows-list li a.not-returned {
+    background: rgb(253, 221, 221);
+}
+
+#borrows-list li a.returned {
+    background: rgb(221, 238, 190);
+}

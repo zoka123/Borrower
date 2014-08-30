@@ -314,6 +314,8 @@ var app = {
         var self = this;
 
         $.extend($.mobile, {
+//            hashListeningEnabled: false,
+//            linkBindingEnabled: false,
             defaultPageTransition: "slide"
         });
 
@@ -333,7 +335,14 @@ var app = {
 
 
     render_ItemsPage: function () {
-        $(document).on("tap", "#items-list-container li a", function () {
+        $("#items-panel").panel("close");
+
+        $(document).off("click", "#items-list-container li a");
+        $(document).on("click", "#items-list-container li a", function (e) {
+            history.pushState({id: 'PANEL_OPEN'}, '', '');
+
+            e.preventDefault();
+            e.stopPropagation();
             var item_id = $(this).attr("data-item-id");
             selectListItem(item_id, $(this).text());
 
@@ -364,7 +373,12 @@ var app = {
     },
 
     render_FriendsPage: function () {
-        $(document).on("tap", "#friends-list-container li a", function () {
+        $("#friends-panel").panel("close");
+        $(document).off("click", "#friends-list-container li a");
+        $(document).on("click", "#friends-list-container li a", function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            history.pushState({id: 'PANEL_OPEN'}, '', '');
             var friend_id = $(this).attr("data-friend-id");
             selectListItem(friend_id, $(this).text());
             $("#friends-panel").panel("open");
@@ -448,7 +462,11 @@ var app = {
     },
 
     render_BorrowsPage: function () {
-        $(document).on("tap", "#borrows-list-container li a", function () {
+        $(document).off("click", "#borrows-list-container li a");
+        $(document).on("click", "#borrows-list-container li a", function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
             var borrow = {
                 friend_id: $(this).attr("data-friend-id"),
                 item_id: $(this).attr("data-item-id")
@@ -526,7 +544,6 @@ var app = {
             .listview();
         $.mobile.loading("hide");
     }
-
 
 
 };

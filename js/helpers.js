@@ -26,10 +26,15 @@ function refreshLayout() {
     $("[data-role='footer']").toolbar();
 }
 
-function selectListItem(key, value) {
+function selectListItem(key, value, callback) {
     selected_list_item_key = key;
     selected_list_item_value = value;
     $(".selected-list-item-name").text(value);
+    try {
+        callback();
+    } catch (e) {
+        console.log(e);
+    }
 }
 
 function borrowToFriend() {
@@ -45,7 +50,7 @@ function borrowToFriend() {
             })
             .attr({'id': 'friends-list', 'data-role': 'listview', 'data-filter': 'true', 'data-filter-placeholder': 'Search...'})
             .htmlTo('#selection-popup')
-            .listview().each(function(){
+            .listview().each(function () {
                 $.mobile.loading("hide");
                 $('#selection-popup').popup().popup("open");
             });
@@ -136,11 +141,12 @@ function deleteFriend() {
 }
 
 function showBorrowedItems() {
+    $('#history-list-container').html("");
     Borrows.loadByFriend(selected_list_item_key, function (data) {
         Borrows.borrows = data;
+        $.mobile.changePage("#BorrowsPage");
     });
 
-    $.mobile.changePage("#BorrowsPage");
 }
 
 function renderDate(dateTime) {
@@ -199,8 +205,7 @@ function quickBorrow(result) {
         item = item[0];
 
         if (confirm("Confirm borrowing item " + item.title)) {
-            selectListItem(item.id, item.title);
-            borrowToFriend();
+            selectListItem(item.id, item.title, borrowToFriend);
         }
     } catch (e) {
         alert("No item found");
@@ -208,9 +213,10 @@ function quickBorrow(result) {
 }
 
 function showBorrowHistory() {
+    $('#history-list-container').html("");
     Borrows.loadByItem(selected_list_item_key, function (data) {
         Borrows.borrows = data;
+        $.mobile.changePage("#HistoryPage");
     });
 
-    $.mobile.changePage("#HistoryPage");
 }
